@@ -6,9 +6,10 @@ const express = require('express');
 
 // creates an express application using the express module
 const server = express();
+server.use(express.json())
 
 //require the db data
-const database = require('./data/db.js')
+const database = require('./data/db.js');
 
 // configures our server to execute a function for every GET request to "/"
 // the second argument passed to the .get() method is the "Route Handler Function"
@@ -21,12 +22,54 @@ server.get('/', (req, res) => {
 
 // new route handler that responds to get requests
 
+//get request
 server.get("/api/users", (req, res) => {
   database
     .find()
     .then(users => res.status(200).json(users))
     .catch(err => res.status(500).json({ error: `Request Denied: ${err}` }));
 });
+
+//get by ID
+server.get("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  database
+    .findById(id)
+    .then(user =>
+      user
+        ? res.status(200).json(user)
+        : res.status(500).json({ error: `The user with the specified ID does not exist.` })
+        )
+    .catch(err => res.status(500)
+    .json({error: `The user information could not be retrieved ${err}`}))
+});
+
+//post request
+server.post('/api/users', (req, res) => {
+  const { name, bio } = req.body;
+
+  if(!name || !bio){
+    res
+    .status(400)
+    .json({ errorMessage: 'Please provide a name for the user' });
+} 
+else {
+  database.insert(req.body)
+    .then(database => {
+      res.status(201).json(database);
+    })
+    .catch(() => {
+      res.status(500).json({
+        errorMessage:
+          'its broken!',
+      });
+    });
+}
+});
+
+
+
+
 
 
 // once the server is fully configured we can have it "listen" for connections on a particular "port"
