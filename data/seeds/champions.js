@@ -4,12 +4,12 @@ exports.seed = function(knex) {
     .then(function() {
       return knex('users').insert([
         {
-          name: 'Samwise Gamgee',
-          bio: 'Gardener and poet. Married to Rose Cotton',
+          name: 'Shieda Kayn',
+          bio: 'Noxian tool of war, wielder of Rhaast',
         },
         {
-          name: 'Frodo Baggins',
-          bio: 'The ring bearer',
+          name: 'Ekko',
+          bio: 'Local time traveler',
         },
       ]);
     });
